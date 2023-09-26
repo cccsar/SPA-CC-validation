@@ -18,7 +18,7 @@ impl std::fmt::Display for ValidationError {
         match self {
             ValidationError::EMPTY_FIELD => write!(f, "This field cannot be empty"),
             ValidationError::INVALID_CHARSET(context) => write!(f, "Invalid Character found. {context}"),
-            ValidationError::INVALID_CVV(context) => write!(f, "invalid lengt of CVV: {context}"),
+            ValidationError::INVALID_CVV(context) => write!(f, "invalid length of CVV: {context}"),
             ValidationError::INVALID_SPIRY_DATE(content) => write!(f, "Expiration date must be later than today. {content}"),
             ValidationError::INVALID_PAN => write!(f, "Credit card numbers are 16 to 19 characters long"),
             ValidationError::INVALID_BITCHECK => write!(f, "Invalid credit card number"),
