@@ -8,6 +8,8 @@ edition = "2021"
 [dependencies]
 actix-web = "4.4.0"
 anyhow = "1.0.75"
-chrono = { version = "0.4.31", fatures = ["serde"] }
+chrono = "0.4.31"
+env_logger = "0.10.0"
+log = "0.4.20"
 serde = {versin = "1.0.188", features = ["derive"] }
 tokio = { version="1.32.0", features =["macros", "rt-multi-thread"] }
