@@ -9,16 +9,19 @@
   <p>
     <form>
       <h3>Name of the credit card holder</h3>
-      <input type="text" name="name" /><br/>
+      <input type="text" name="name"/><br/>
 
       <h3>Credit card number</h3>
       <input type="text" name="ccn" /><br/>
+      <p style="color:red"> {{ pan }} {{ bitcheck }}</p>
 
       <h3>CVV</h3>
-      <input type="text" name="cvv" /><br/>
+      <input type="text" name="cvv" value="123"/><br/>
+      <text style="color:red"> {{ cvv }} </text>
 
-      <h3>Expiration date</h3>
-      <input type="text" name="expiry_date" /><br/>
+      <h3> Expiration date. In the format `%YYYY %mm` </h3>
+      <input type="text" name="expiry_date"/><br/>
+      <text style="color:red"> {{ spiry_date }} </text> 
 
       <p><input type="submit"></p>
     </form>

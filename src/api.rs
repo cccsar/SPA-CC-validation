@@ -3,28 +3,53 @@
 use actix_web::{get, HttpResponse, Responder, web::Query, http::header::ContentType};
 use askama::Template;
 
-use crate::models::CCFields;
+use crate::models::{CCFields, AfterValidate};
 
-#[derive(Template)]
+#[derive(Template, Default)]
 #[template(path = "index.html")]
-pub struct Index;
+pub struct Index {
+    spiry_date : String,
+    cvv : String ,
+    pan : String, 
+    bitcheck : String, 
+}
+
+#[derive(Template, Default)]
+#[template(path = "success.html")]
+pub struct Success {}
 
 /// Function holding behaviour for the single endpoint.
 /// Perform validations and produce an HTML response accordingly
 #[get("/")]
 pub async fn unique(query : Option<Query<CCFields>>) -> impl Responder {
     
+    log::info!("{:#?}", query);
+    
     // Accordig to received parameters, produce an adecuate template
     let result = match query { 
-        Some(actual_query) => {
-            // Validation happen here
-            let _validations = actual_query.0.run_validations();
 
-            "Implementing validations".to_string()
+        // Validation happen here
+        Some(actual_query) => {
+            log::info!("Validating query: {:#?}", actual_query);
+
+            let cc_fields = actual_query.0;
+
+            let validations = AfterValidate::from(cc_fields);
+
+            if validations.all_ok() {
+                // When all validations pass, render success temlate
+                Success{}.render().expect("Problem with template")
+            }
+            else { 
+                // Otherwise update Index state
+                Index::from(validations).render().expect("Problem with template")
+            }
+
         }
+        // Direct Rendering
         None => {
-            // Direct Rendering
-            Index{}.render().expect("invalid template")
+            log::info!("Showing default view");
+            Index{..Default::default() }.render().expect("invalid template")
         }
     };
 
@@ -33,7 +58,15 @@ pub async fn unique(query : Option<Query<CCFields>>) -> impl Responder {
             .body(result)
 
 }
-// TODO Expiry date val
-// TODO CVV val
-// TODO Pan val
-// TODO Lun's algorithm bit check
+
+impl From<AfterValidate> for Index {
+    fn from(value: AfterValidate) -> Self {
+
+        Index { 
+            cvv: AfterValidate::err_to_string(value.cvv),
+            spiry_date: AfterValidate::err_to_string(value.spiry_date),
+            pan: AfterValidate::err_to_string(value.pan), 
+            bitcheck: AfterValidate::err_to_string(value.bitcheck) 
+        } 
+    }
+}

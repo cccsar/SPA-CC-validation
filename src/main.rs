@@ -35,5 +35,3 @@ async fn main() -> anyhow::Result<()>  {
 
     Ok(())
 }
-// TODO add API documentation
-
