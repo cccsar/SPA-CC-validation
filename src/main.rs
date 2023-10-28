@@ -1,8 +1,11 @@
+// External
 use actix_web::{ HttpServer, App, middleware::Logger};
+use actix_files as fs;
 use env_logger::Env;
 use tokio;
 use anyhow;
 
+// Local
 mod api;
 mod models;
 
@@ -21,6 +24,9 @@ async fn main() -> anyhow::Result<()>  {
     // Initialize server
     HttpServer::new(|| {
         App::new()
+
+            // Serving static files
+            .service(fs::Files::new("/static", "./static"))    
 
             // Add logger
             .wrap(Logger::new("%a %{User-Agent}i"))
