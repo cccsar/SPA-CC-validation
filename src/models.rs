@@ -43,52 +43,36 @@ impl CCFields {
 
     pub fn run_validations(self : & Self) -> AfterValidate {
         AfterValidate { 
-            spiry_date: self.is_valid_spiry_date(), 
+            spiry_date: self.validate_spiry_date(), 
             cvv: self.is_valid_cvv(), 
             pan: self.is_valid_PAN() ,
             bitcheck: self.bitcheck()
         }        
     }
     
-
     /// Validates expiration date
-    fn is_valid_spiry_date(self: &Self) -> Option<ValidationError> { 
+    fn validate_spiry_date(self: & Self) -> Option<ValidationError> {
+        // Provided expiry `NaiveDate`
+        if let Ok(given_date) = NaiveDate::parse_from_str(&self.expiry_date, "%Y-%m-%d") {
 
-        let today = Utc::now();
+            let given_year = given_date.year_ce().1;
 
-        let this_year = today.year();
-        let this_month = today.month();
+            // `NaiveDate` of today
+            let today = Utc::now().date_naive();
 
-        let mut processed_date = self.expiry_date.split_ascii_whitespace();
+            let this_year = today.year_ce().1;
 
-        if let Some(given_year_str) = processed_date.next() {
-
-            if let Some(given_month_str) = processed_date.next() {
-
-                // Deal with leading zeores
-                let given_month_str = given_month_str.trim_matches('0');
-
-                let given_year = given_year_str .parse::<u32>();
-                let given_month = given_month_str.parse::<u32>();
-
-                return match (given_year.clone(), given_month.clone()) {
-                    (Ok(year), Ok(month)) => {
-                        if (this_year as u32) < year || (this_year as u32 == year && this_month < month)  {
-                            None
-                        }
-                        else {
-                            Some(ValidationError::INVALID_SPIRY_DATE("Date format is: %YYYY %mm".to_string()))
-                        }
-                    }
-                    _ =>  {
-                        Some(ValidationError::INVALID_SPIRY_DATE("Date format is: %YYYY %mm".to_string()))
-                    }
-                }
+            if (this_year < given_year || (this_year == given_year && today.month0() < given_date.month0())) {
+                None
+            }
+            else {
+                Some(ValidationError::INVALID_SPIRY_DATE(self.expiry_date.clone()))
             }
         }
+        else {
+            Some(ValidationError::INVALID_SPIRY_DATE(self.expiry_date.clone()))
+        }
 
-        // If given date is impropperly formatted, act accordingly
-        return Some(ValidationError::INVALID_SPIRY_DATE("Date format is: %YYYY %mm".to_string()))
     }
 
     /// Validates CVV
