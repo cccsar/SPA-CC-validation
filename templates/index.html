@@ -6,38 +6,43 @@
   <title>CCN validation</title>
 </head>
 <body>
-  <h1 class="display-3"> Fill the following fields with your credit card information</h1>
+  <h1 class="display-4"> Fill the following fields with your credit card information</h1>
   <p>
-    <div class="form-center">
-      <form>
-        <div class="input-group input-group-sm mb-3">
-          <span class="input-group-text bg-secondary-subtle" id="inputGroup-cch"> Name of the credit card holder </span>
+    <div class="form-center justify-content-center">
+      <form class="row g-3">
+        <div class="col-md-12">
+          <span class="form-label" id="inputGroup-cch"> Name of the credit card holder </span>
           <!-- <label class="form-label">Name of the credit card holder</label> -->
           <input type="text" class="form-control" name="name" placeholder="Jhon Smith"/><br/>
         </div>
 
-        <div class="input-group input-group-sm mb-3">
-          <span class="input-group-text bg-secondary-subtle" id="inputGroup-ccn">CCN</span>
-          <input type="number" class="form-control" name="ccn" pattern="[0-9]{16,19}" placeholder="xxxx xxxx xxxx xxxx"/><br/>
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-secondary-subtle" id="inputGroup-ccn">CCN</span>
+            <input type="number" class="form-control" name="ccn" pattern="[0-9]{16,19}" placeholder="xxxx xxxx xxxx xxxx" required/><br/>
+          </div>
+          <!-- Warn text -->
+          <div id="noc" class="form-text text-danger mb-3" > {{ pan}} {{ bitcheck }} </div>
         </div>
-        <!-- Warn text -->
-        <div id="noc" class="form-text text-danger mb-3" > {{ pan}} {{ bitcheck }} </div>
 
-        <div class="input-group input-group-sm mb-3">
-          <span class="input-group-text bg-secondary-subtle" id="inputGroup-cvv">CVV</span>
-          <input type="number" class="form-control" name="cvv" placeholder="123"/><br/>
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-secondary-subtle" id="inputGroup-cvv">CVV</span>
+            <input type="number" class="form-control" name="cvv" placeholder="123" required/><br/>
+          </div>
+          <!-- Warn text -->
+          <div id="noc2" class="form-text text-danger mb-3" > {{cvv}} </div>
         </div>
-        <!-- Warn text -->
-        <div id="noc2" class="form-text text-danger mb-3" > {{cvv}} </div>
 
-        <div class="input-group input-group-small mb-3">
-          <span class="input-group-text bg-secondary-subtle" id="inputGroup-cc-date"> Expiration date </span>
+        <div class="col-md-12">
+          <label class="form-label" id="inputGroup-cc-date"> Expiration date </label>
 
-          <input type="date" class="form-control" name="expiry_date"/><br/>
+          <input type="date" class="form-control" name="expiry_date" required/><br/>
         </div>
         <!-- Warn text -->
         <div id="noc3" class="form-text mb-3 text-danger" > {{spiry_date}} </div>
 
+        
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
